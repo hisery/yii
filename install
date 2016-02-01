@@ -1,0 +1,20 @@
+安装Yii
+一、安装Composer
+curl -s http://getcomposer.org/installer | php
+mv composer.phar /usr/local/bin/composer
+
+二、安装composer依赖
+运行下面的命令来安装Composer Asset插件:
+composer global require "fxp/composer-asset-plugin:~1.1.1"
+
+现在选择的应用程序模板之一，开始安装 Yii 2.0。应用程序模板是一个包含Yii写的骨架Web应用程序包。
+安装基本的应用程序模板，运行下面的命令：
+composer create-project yiisoft/yii2-app-basic basic 2.0.6
+
+安装高级的应用程序模板，运行下面的命令： 
+composer create-project yiisoft/yii2-app-advanced advanced 2.0.6
+
+注意：如果你没有添加 GitHub 密钥的话，composer update 会提示你登录：
+解决办法就是：
+    进入 https://github.com/settings/tokens 点击 「Generate new token」
+新建一个 Token，选择默认新建就行，然后就会得到一个 Token，然后输入这个值就 OK 了。
