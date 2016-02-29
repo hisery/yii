@@ -1,0 +1,58 @@
+一、安装Redis和简单配置
+
+1. 下载Redis安装包
+地址：http://redis.io/download , 本文选择Stable(3.0)版本
+wget http://download.redis.io/releases/redis-3.0.5.tar.gz
+
+2. 安装Redis
+tar xzf redis-3.0.5.tar.gz
+cd redis-3.0.5
+make
+
+3. 启动Redis
+./src/redis-server &
+
+附加内容 ：
+Redis默认不是后台启动，不加 “&” 时会一直停留在命令界面
+最好搭配配置文件一起启动例如：
+./src/redis-server ./redis.conf
+redis.conf中设置 “daemonize no” 为 “daemonize yes” 也代表redis以后台的方式启动，前提时redis-server启动时带上redis.conf
+
+二、安装phpredis扩展
+1. 下载phpredis扩展安装包
+wget http://pecl.php.net/get/redis-2.2.7.tgz , 本文选择2.2.7版本
+
+2. 安装phpredis
+tar zxvf redis-2.2.7.tgz
+cd redis-2.2.7
+/opt/server/php-5.5.7/bin/phpize   ###可能位置不太一样,find一下
+./configure
+make
+make install
+以上步骤完成后需要在php.ini中添加如下代码：
+extension=/opt/server/php-5.5.7/lib/php/extensions/no-debug-non-zts-20121212/redis.so
+
+3.重启web组件(本文使用Nginx + php5-fpm)
+/opt/server/nginx/sbin/nginx -s reload
+kill -USR2 `cat /opt/server/php-5.5.7/var/run/php-fpm.pid`
+#或者重启apache
+
+三、配置Yii2的redis扩展(本文使用Yii2 basic 版)
+官方提供的文档地址：https://github.com/yiisoft/yii2-redis/blob/master/docs/guide/README.md
+1. 安装Yii2的redis扩展
+cd /www/html/basic
+php composer.phar require --prefer-dist yiisoft/yii2-redis
+
+2. 配置basic/config/web.php
+在components数组中添加如下内容：
+'redis' => [
+    'class' => 'yii\redis\Connection',
+    'hostname' => 'localhost',
+    'port' => 6379,
+    'database' => 0,
+],
+
+3. 使用
+$redis = Yii::$app->redis;
+$redis->get('key');
+$redis->set('k','v');
